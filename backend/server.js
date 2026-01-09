@@ -102,9 +102,44 @@ app.delete("/jobs/:id", (req, res) => {
   res.json({ message: "Job deleted" });
 });
 
+// ✅ Update User Profile
+app.post("/update-profile", (req, res) => {
+  const { phone, education, experience, skills, projects, about, email } = req.body;
+  console.log(`Updating profile for: ${email}`);
+
+  if (!email) {
+    return res.status(400).json({ message: "Email is required" });
+  }
+
+  const data = readData();
+  const userIndex = data.users.findIndex(u => u.email === email);
+
+  if (userIndex === -1) {
+    console.log("User not found for update");
+    return res.status(404).json({ message: "User not found" });
+  }
+
+  // Update fields
+  const updatedUser = {
+    ...data.users[userIndex],
+    phone: phone || data.users[userIndex].phone,
+    education: education || data.users[userIndex].education,
+    experience: experience || data.users[userIndex].experience,
+    skills: skills || data.users[userIndex].skills,
+    projects: projects || data.users[userIndex].projects,
+    about: about || data.users[userIndex].about,
+  };
+
+  data.users[userIndex] = updatedUser;
+  writeData(data);
+  console.log("Profile updated successfully");
+
+  res.json({ message: "Profile updated", user: updatedUser });
+});
+
 // ✅ Apply for a job
 app.post("/apply", (req, res) => {
-  const { jobId, name, email } = req.body;
+  const { jobId, name, email, phone, education, experience, skills, projects, about } = req.body;
 
   if (!jobId || !name || !email) {
     return res.status(400).json({ message: "Missing fields" });
@@ -119,6 +154,12 @@ app.post("/apply", (req, res) => {
     jobId: Number(jobId),
     name,
     email,
+    phone,
+    education,
+    experience,
+    skills,
+    projects,
+    about,
     status: "Applied",
   };
   
@@ -128,7 +169,7 @@ app.post("/apply", (req, res) => {
   res.status(201).json({ message: "Application submitted", application: newApp });
 });
 
-// ✅ View all applications (Enriched with Job Details)
+// ✅ View all applications (Enriched with Job Details and Candidate Profile)
 app.get("/applications", (req, res) => {
   const { email } = req.query;
   const data = readData();
@@ -140,8 +181,18 @@ app.get("/applications", (req, res) => {
 
   const enrichedApplications = applications.map(app => {
     const job = data.jobs.find(j => j.id === app.jobId);
+    const candidate = data.users.find(u => u.email === app.email);
+
     return {
       ...app,
+      // Merge candidate profile details (live data preference)
+      phone: candidate?.phone || app.phone || "Not provided",
+      education: candidate?.education || app.education || "Not specified",
+      experience: candidate?.experience || app.experience || "Not specified",
+      skills: candidate?.skills || app.skills || "Not specified",
+      projects: candidate?.projects || app.projects || "Not specified",
+      about: candidate?.about || app.about || "No summary available",
+      
       jobTitle: job ? job.title : "Unknown Job",
       company: job ? job.company : "Unknown Company"
     };

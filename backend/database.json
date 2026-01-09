@@ -11,9 +11,80 @@
       "title": "Backend Developer",
       "company": "CodeWorks",
       "location": "Bangalore"
+    },
+    {
+      "id": 3,
+      "title": "are",
+      "company": "jhv",
+      "location": "jhv"
+    },
+    {
+      "id": 4,
+      "title": "software engineer",
+      "company": "TCS",
+      "location": "KOCHI"
+    },
+    {
+      "id": 5,
+      "title": "frontend  developer",
+      "company": "WIPRO",
+      "location": "TVM"
+    },
+    {
+      "id": 6,
+      "title": "CEO",
+      "company": "Nambiar Works ",
+      "location": "Remote"
     }
   ],
-  "applications": [],
+  "applications": [
+    {
+      "id": 1,
+      "jobId": 3,
+      "name": "sas",
+      "email": "d@gmail.com",
+      "status": "Interview Scheduled",
+      "interviewDateTime": "10/1/2026, 12:10:58 am"
+    },
+    {
+      "id": 2,
+      "jobId": 2,
+      "name": "sas",
+      "email": "d@gmail.com",
+      "status": "Rejected",
+      "interviewDateTime": null
+    },
+    {
+      "id": 3,
+      "jobId": 1,
+      "name": "sas",
+      "email": "d@gmail.com",
+      "status": "Rejected",
+      "interviewDateTime": null
+    },
+    {
+      "id": 4,
+      "jobId": 4,
+      "name": "sas",
+      "email": "d@gmail.com",
+      "status": "Rejected",
+      "interviewDateTime": null
+    },
+    {
+      "id": 5,
+      "jobId": 5,
+      "name": "sas",
+      "email": "d@gmail.com",
+      "phone": "123213",
+      "education": "btech",
+      "experience": "intern",
+      "skills": "react",
+      "projects": "job orbit",
+      "about": "nil",
+      "status": "Rejected",
+      "interviewDateTime": null
+    }
+  ],
   "users": [
     {
       "id": 1,
@@ -21,6 +92,85 @@
       "email": "test1767979978321@example.com",
       "password": "password123",
       "role": "fresher"
+    },
+    {
+      "id": 2,
+      "name": "Nafiya",
+      "email": "123@email.com",
+      "password": "123",
+      "role": "recruiter"
+    },
+    {
+      "id": 3,
+      "name": "ruzu",
+      "email": "ruzu@email.com",
+      "password": "123",
+      "role": "fresher"
+    },
+    {
+      "id": 4,
+      "name": "ert",
+      "email": "dfgh@gmail.com",
+      "password": "rty",
+      "role": "fresher"
+    },
+    {
+      "id": 5,
+      "name": "er",
+      "email": "dfg@gmail.com",
+      "password": "erty",
+      "role": "recruiter"
+    },
+    {
+      "id": 6,
+      "name": "wert",
+      "email": "dh@gmail.com",
+      "password": "2345",
+      "role": "recruiter"
+    },
+    {
+      "id": 7,
+      "name": "sas",
+      "email": "d@gmail.com",
+      "password": "123",
+      "role": "fresher",
+      "phone": "123213",
+      "education": "btech",
+      "skills": "react",
+      "about": "nil",
+      "experience": "intern",
+      "projects": "job orbit"
+    },
+    {
+      "id": 8,
+      "name": "dw",
+      "email": "q@gmail.com",
+      "password": "123",
+      "role": "recruiter"
+    },
+    {
+      "id": 9,
+      "name": "sa",
+      "email": "qa@gmail.com",
+      "password": "123",
+      "role": "recruiter"
+    },
+    {
+      "id": 10,
+      "name": "nafiya",
+      "email": "nafiya@gmail.com",
+      "password": "123",
+      "role": "fresher"
+    },
+    {
+      "id": 11,
+      "name": "Appu",
+      "email": "appu@gmail.com",
+      "password": "123456",
+      "role": "fresher",
+      "education": "b tech",
+      "skills": "backend",
+      "about": "frontrnd developer"
     }
   ]
 }
