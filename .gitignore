@@ -1,0 +1,25 @@
+# Node modules
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Logs
+logs
+*.log
+
+# Environment files
+.env
+
+# Build output
+dist/
+build/
+
+# Vite and React cache
+.vite/
+.cache/
+.DS_Store
+
+# IDE and system files
+.vscode/
+.idea/
+Thumbs.db
