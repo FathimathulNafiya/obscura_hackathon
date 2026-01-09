@@ -37,9 +37,9 @@ function Signup() {
         <h2 className="auth-header">Create Account</h2>
         <p className="auth-subtitle">Join Job Orbit today.</p>
         
-        {error && <p style={{ color: "#ef4444", marginBottom: "15px", fontSize: "0.9rem" }}>{error}</p>}
+        {error && <div className="error-message">{error}</div>}
         
-        <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column" }}>
+        <form onSubmit={handleSubmit}>
           <input 
             name="name" 
             placeholder="Full Name" 
@@ -67,16 +67,15 @@ function Signup() {
             className="input-field"
           />
           
-          <div style={{ display: "flex", gap: "12px", alignItems: "center", marginBottom: "10px" }}>
-            <label style={{ color: "#94a3b8", fontSize: "0.95rem" }}>I am a:</label>
+          <div style={{ position: "relative", marginBottom: "16px" }}>
             <select 
               name="role" 
               value={formData.role} 
               onChange={handleChange}
               className="select-field"
-              style={{ flex: 1, marginBottom: 0 }}
+              style={{ marginBottom: 0 }}
             >
-              <option value="fresher">Fresher (Candidate)</option>
+              <option value="fresher">Candidate (Fresher)</option>
               <option value="recruiter">Recruiter</option>
             </select>
           </div>
