@@ -34,26 +34,28 @@ function Signup() {
   return (
     <div className="center-page">
       <div className="card">
-        <h2>Sign Up</h2>
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        <h2 className="auth-header">Create Account</h2>
+        <p className="auth-subtitle">Join Job Orbit today.</p>
         
-        <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+        {error && <p style={{ color: "#ef4444", marginBottom: "15px", fontSize: "0.9rem" }}>{error}</p>}
+        
+        <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column" }}>
           <input 
             name="name" 
             placeholder="Full Name" 
             value={formData.name} 
             onChange={handleChange}
             required
-            style={{ padding: "8px" }}
+            className="input-field"
           />
           <input 
             name="email" 
             type="email" 
-            placeholder="Email" 
+            placeholder="Email Address" 
             value={formData.email} 
             onChange={handleChange}
             required
-            style={{ padding: "8px" }}
+            className="input-field"
           />
           <input 
             name="password" 
@@ -62,27 +64,28 @@ function Signup() {
             value={formData.password} 
             onChange={handleChange}
             required
-            style={{ padding: "8px" }}
+            className="input-field"
           />
           
-          <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-            <label>I am a:</label>
+          <div style={{ display: "flex", gap: "12px", alignItems: "center", marginBottom: "10px" }}>
+            <label style={{ color: "#94a3b8", fontSize: "0.95rem" }}>I am a:</label>
             <select 
               name="role" 
               value={formData.role} 
               onChange={handleChange}
-              style={{ padding: "5px" }}
+              className="select-field"
+              style={{ flex: 1, marginBottom: 0 }}
             >
               <option value="fresher">Fresher (Candidate)</option>
               <option value="recruiter">Recruiter</option>
             </select>
           </div>
 
-          <button className="glass-btn" type="submit">Create Account</button>
+          <button className="glass-btn" type="submit" style={{ marginTop: "10px" }}>Create Account</button>
         </form>
 
-        <p style={{ marginTop: "15px", fontSize: "0.9rem" }}>
-          Already have an account? <span style={{ color: "#38bdf8", cursor: "pointer" }} onClick={() => navigate("/")}>Login</span>
+        <p className="auth-link">
+          Already have an account? <span onClick={() => navigate("/")}>Login</span>
         </p>
       </div>
     </div>

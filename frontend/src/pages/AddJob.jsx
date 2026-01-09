@@ -28,16 +28,28 @@ function AddJob() {
         <h1>Add Job</h1>
         <form onSubmit={handleSubmit} style={{ maxWidth: 520 }}>
           <div style={{ marginBottom: 12 }}>
-            <label>Title</label>
-            <input value={title} onChange={e => setTitle(e.target.value)} />
+            <label style={{ display: "block", marginBottom: "6px", color: "#cbd5f5" }}>Title</label>
+            <input 
+              value={title} 
+              onChange={e => setTitle(e.target.value)} 
+              className="input-field"
+            />
           </div>
           <div style={{ marginBottom: 12 }}>
-            <label>Company</label>
-            <input value={company} onChange={e => setCompany(e.target.value)} />
+            <label style={{ display: "block", marginBottom: "6px", color: "#cbd5f5" }}>Company</label>
+            <input 
+              value={company} 
+              onChange={e => setCompany(e.target.value)} 
+              className="input-field"
+            />
           </div>
           <div style={{ marginBottom: 12 }}>
-            <label>Location</label>
-            <input value={location} onChange={e => setLocation(e.target.value)} />
+            <label style={{ display: "block", marginBottom: "6px", color: "#cbd5f5" }}>Location</label>
+            <input 
+              value={location} 
+              onChange={e => setLocation(e.target.value)} 
+              className="input-field"
+            />
           </div>
           <button className="glass-btn" type="submit">Add Job</button>
         </form>

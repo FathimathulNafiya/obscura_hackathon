@@ -32,6 +32,32 @@ export const signupUser = async (userData) => {
   }
 };
 
+export const updateProfile = async (email, profileData) => {
+  try {
+    const response = await fetch(`${API_URL}/update-profile`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...profileData, email }),
+    });
+
+    const text = await response.text();
+    
+    if (!response.ok) {
+      throw new Error(`Server Error (${response.status}): ${text.substring(0, 100)}`);
+    }
+
+    try {
+      return JSON.parse(text);
+    } catch (e) {
+      throw new Error("Invalid server response (not JSON)");
+    }
+
+  } catch (error) {
+    console.error("Error updating profile:", error);
+    return { message: error.message };
+  }
+};
+
 // =======================
 // JOBS
 // =======================

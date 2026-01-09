@@ -28,7 +28,7 @@ function MyApplications() {
       <Sidebar />
 
       <div className="main">
-        <h1>My Applications</h1>
+        <h1>Application Status</h1>
 
         <div className="job-grid">
           {apps.map((a) => (
@@ -36,6 +36,16 @@ function MyApplications() {
               <h4>{a.jobTitle}</h4>
               <p>{a.company}</p>
               <span className="status">{a.status}</span>
+              
+              {a.interviewDateTime && (
+                <div style={{ marginTop: "10px", padding: "10px", background: "rgba(59, 130, 246, 0.1)", borderRadius: "8px", borderLeft: "3px solid #3b82f6" }}>
+                  <p style={{ margin: 0, fontSize: "0.9rem", color: "#93c5fd" }}>
+                    <strong>Interview Scheduled:</strong><br />
+                    {a.interviewDateTime}
+                  </p>
+                </div>
+              )}
+
               <button className="delete-btn" onClick={() => remove(a.id)}>
                 Delete
               </button>

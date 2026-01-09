@@ -13,6 +13,7 @@ const STATUSES = [
 const Recruiter = () => {
   const [applications, setApplications] = useState([]);
   const [activeStatus, setActiveStatus] = useState("Applied");
+  const [selectedCandidate, setSelectedCandidate] = useState(null); // For Resume Modal
   const navigate = useNavigate();
   const { logout } = useAuth();
 
@@ -93,6 +94,14 @@ const Recruiter = () => {
                 <p><b>Role:</b> {app.jobTitle}</p>
                 <p><b>Company:</b> {app.company}</p>
 
+                {/* View Resume Button */}
+                <button 
+                  onClick={() => setSelectedCandidate(app)}
+                  style={{...btn.blue, marginTop: "10px", background: "transparent", border: "1px solid #38bdf8", color: "#38bdf8"}}
+                >
+                  View Resume
+                </button>
+
                 {app.interviewDateTime && (
                   <p style={styles.interview}>
                     📅 {app.interviewDateTime}
@@ -153,6 +162,47 @@ const Recruiter = () => {
           </div>
         )}
       </main>
+
+      {/* RESUME MODAL */}
+      {selectedCandidate && (
+        <div style={styles.modalOverlay}>
+          <div style={styles.modalContent}>
+            <button 
+              onClick={() => setSelectedCandidate(null)}
+              style={styles.closeBtn}
+            >
+              &times;
+            </button>
+            
+            <div style={styles.resumeHeader}>
+              <h2>{selectedCandidate.name}</h2>
+              <p>{selectedCandidate.email} | {selectedCandidate.phone || "No Phone"}</p>
+              <p style={{ marginTop: "5px", color: "#cbd5e1" }}>{selectedCandidate.about}</p>
+            </div>
+
+            <div style={styles.resumeSection}>
+              <h4>Technical Skills</h4>
+              <p>{selectedCandidate.skills || "Not specified"}</p>
+            </div>
+
+            <div style={styles.resumeSection}>
+              <h4>Education</h4>
+              <p style={{ whiteSpace: "pre-wrap" }}>{selectedCandidate.education || "Not specified"}</p>
+            </div>
+
+            <div style={styles.resumeSection}>
+              <h4>Experience</h4>
+              <p style={{ whiteSpace: "pre-wrap" }}>{selectedCandidate.experience || "Not specified"}</p>
+            </div>
+
+            <div style={styles.resumeSection}>
+              <h4>Projects</h4>
+              <p style={{ whiteSpace: "pre-wrap" }}>{selectedCandidate.projects || "Not specified"}</p>
+            </div>
+
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -166,6 +216,51 @@ const styles = {
     background: "#020617",
     color: "#fff",
     fontFamily: "Arial, sans-serif",
+  },
+  
+  /* MODAL */
+  modalOverlay: {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    background: "rgba(0,0,0,0.7)",
+    backdropFilter: "blur(5px)",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 1000,
+  },
+  modalContent: {
+    background: "#0f172a",
+    width: "600px",
+    maxHeight: "85vh",
+    overflowY: "auto",
+    padding: "40px",
+    borderRadius: "16px",
+    border: "1px solid rgba(255,255,255,0.1)",
+    position: "relative",
+    boxShadow: "0 20px 50px rgba(0,0,0,0.5)",
+  },
+  closeBtn: {
+    position: "absolute",
+    top: "15px",
+    right: "20px",
+    background: "transparent",
+    border: "none",
+    color: "#fff",
+    fontSize: "28px",
+    cursor: "pointer",
+  },
+  resumeHeader: {
+    borderBottom: "1px solid rgba(255,255,255,0.1)",
+    paddingBottom: "20px",
+    marginBottom: "20px",
+    textAlign: "center",
+  },
+  resumeSection: {
+    marginBottom: "20px",
   },
 
   /* SIDEBAR */

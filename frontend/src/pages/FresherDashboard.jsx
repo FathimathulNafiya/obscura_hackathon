@@ -1,26 +1,42 @@
 import { useEffect, useState } from "react";
 import { getJobs, getApplications, applyJob } from "../services/api";
+import { useAuth } from "../context/AuthContext";
 import Sidebar from "../components/Sidebar";
+import { useNavigate } from "react-router-dom";
 
 function FresherDashboard() {
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const [jobs, setJobs] = useState([]);
   const [search, setSearch] = useState("");
   const [apps, setApps] = useState([]);
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    if (user) {
+      fetchData();
+    }
+  }, [user]);
 
   const fetchData = async () => {
     const jobsData = await getJobs();
-    const appsData = await getApplications();
+    const appsData = await getApplications(user.email);
     setJobs(jobsData);
     setApps(appsData);
   };
 
   const handleApply = async (job) => {
-    await applyJob(job.id);        // save application using ID
-    const appsData = await getApplications(); // refresh applications
+    if (!user) return;
+
+    // Validation: Check if mandatory profile fields are filled
+    if (!user.phone || !user.skills || !user.education) {
+      if (confirm("Incomplete Profile: You must complete your resume (Phone, Skills, Education) before applying for jobs. Go to Profile now?")) {
+        navigate("/profile");
+      }
+      return;
+    }
+
+    await applyJob(job.id, user);        // pass user object
+    const appsData = await getApplications(user.email); // refresh applications
     setApps(appsData);
   };
 
@@ -29,7 +45,7 @@ function FresherDashboard() {
       <Sidebar />
 
       <div className="main">
-        <h1>Welcome back, Nafiya!</h1>
+        <h1>Welcome back, {user?.name || "User"}!</h1>
         <p className="subtitle">Here’s a summary of your activity.</p>
 
         <div className="stats">
