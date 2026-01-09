@@ -1,12 +1,14 @@
 import { useState } from "react";
-import { loginUser } from "../services/api";
+import { signupUser } from "../services/api";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
-function Login() {
+function Signup() {
   const [formData, setFormData] = useState({
+    name: "",
     email: "",
-    password: ""
+    password: "",
+    role: "fresher"
   });
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -19,23 +21,31 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-
-    const res = await loginUser(formData);
+    
+    const res = await signupUser(formData);
     
     if (res.user) {
       login(res.user);
     } else {
-      setError(res.message || "Invalid credentials");
+      setError(res.message || "Signup failed");
     }
   };
 
   return (
     <div className="center-page">
       <div className="card">
-        <h2>CampusConnect Login</h2>
+        <h2>Sign Up</h2>
         {error && <p style={{ color: "red" }}>{error}</p>}
-
+        
         <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+          <input 
+            name="name" 
+            placeholder="Full Name" 
+            value={formData.name} 
+            onChange={handleChange}
+            required
+            style={{ padding: "8px" }}
+          />
           <input 
             name="email" 
             type="email" 
@@ -55,15 +65,28 @@ function Login() {
             style={{ padding: "8px" }}
           />
           
-          <button className="glass-btn" type="submit">Login</button>
+          <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+            <label>I am a:</label>
+            <select 
+              name="role" 
+              value={formData.role} 
+              onChange={handleChange}
+              style={{ padding: "5px" }}
+            >
+              <option value="fresher">Fresher (Candidate)</option>
+              <option value="recruiter">Recruiter</option>
+            </select>
+          </div>
+
+          <button className="glass-btn" type="submit">Create Account</button>
         </form>
 
         <p style={{ marginTop: "15px", fontSize: "0.9rem" }}>
-          Don't have an account? <span style={{ color: "#38bdf8", cursor: "pointer" }} onClick={() => navigate("/signup")}>Sign up</span>
+          Already have an account? <span style={{ color: "#38bdf8", cursor: "pointer" }} onClick={() => navigate("/")}>Login</span>
         </p>
       </div>
     </div>
   );
 }
 
-export default Login;
+export default Signup;

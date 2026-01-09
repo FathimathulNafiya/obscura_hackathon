@@ -1,13 +1,26 @@
 import { getApplications, deleteApplication } from "../services/api";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
+import { useAuth } from "../context/AuthContext";
 
 function MyApplications() {
-  const [apps, setApps] = useState(getApplications());
+  const [apps, setApps] = useState([]);
+  const { user } = useAuth();
 
-  const remove = (i) => {
-    deleteApplication(i);
-    setApps(getApplications());
+  useEffect(() => {
+    if (user) {
+      fetchApps();
+    }
+  }, [user]);
+
+  const fetchApps = async () => {
+    const data = await getApplications(user.email);
+    setApps(data);
+  };
+
+  const remove = async (id) => {
+    await deleteApplication(id);
+    fetchApps();
   };
 
   return (
@@ -18,11 +31,12 @@ function MyApplications() {
         <h1>My Applications</h1>
 
         <div className="job-grid">
-          {apps.map((a, i) => (
-            <div key={i} className="job-card">
-              <h4>{a.job}</h4>
+          {apps.map((a) => (
+            <div key={a.id} className="job-card">
+              <h4>{a.jobTitle}</h4>
+              <p>{a.company}</p>
               <span className="status">{a.status}</span>
-              <button className="delete-btn" onClick={() => remove(i)}>
+              <button className="delete-btn" onClick={() => remove(a.id)}>
                 Delete
               </button>
             </div>

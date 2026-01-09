@@ -1,43 +1,132 @@
+const API_URL = "http://localhost:5000";
+
 // =======================
-// JOB DATA (ONLY 4 JOBS)
+// AUTH
 // =======================
 
-export const getJobs = () => {
-  return JSON.parse(localStorage.getItem("jobs")) || [
-    { id: 1, title: "Software Engineer", company: "TCS" },
-    { id: 2, title: "Web Developer", company: "Infosys" },
-    { id: 3, title: "Data Analyst", company: "Wipro" },
-    { id: 4, title: "UI/UX Designer", company: "Accenture" }
-  ];
+export const loginUser = async (credentials) => {
+  try {
+    const response = await fetch(`${API_URL}/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(credentials),
+    });
+    return await response.json();
+  } catch (error) {
+    console.error("Error logging in:", error);
+    return { message: "Network error" };
+  }
+};
+
+export const signupUser = async (userData) => {
+  try {
+    const response = await fetch(`${API_URL}/signup`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(userData),
+    });
+    return await response.json();
+  } catch (error) {
+    console.error("Error signing up:", error);
+    return { message: "Network error" };
+  }
 };
 
 // =======================
-// APPLICATION DATA
+// JOBS
 // =======================
 
-export const getApplications = () => {
-  return JSON.parse(localStorage.getItem("applications")) || [];
+export const getJobs = async () => {
+  try {
+    const response = await fetch(`${API_URL}/jobs`);
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching jobs:", error);
+    return [];
+  }
 };
 
-// Apply for a job
-export const applyJob = (job) => {
-  const apps = getApplications();
-
-  const alreadyApplied = apps.some(a => a.job === job.title);
-  if (alreadyApplied) return;
-
-  apps.push({
-    job: job.title,
-    company: job.company,
-    status: "Applied"
-  });
-
-  localStorage.setItem("applications", JSON.stringify(apps));
+export const getJob = async (id) => {
+  try {
+    const response = await fetch(`${API_URL}/jobs/${id}`);
+    if (!response.ok) throw new Error("Job not found");
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching job:", error);
+    return null;
+  }
 };
 
-// Delete application
-export const deleteApplication = (index) => {
-  const apps = getApplications();
-  apps.splice(index, 1);
-  localStorage.setItem("applications", JSON.stringify(apps));
+export const addJob = async (job) => {
+  try {
+    const response = await fetch(`${API_URL}/jobs`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(job),
+    });
+    return await response.json();
+  } catch (error) {
+    console.error("Error adding job:", error);
+  }
+};
+
+export const deleteJob = async (id) => {
+  try {
+    await fetch(`${API_URL}/jobs/${id}`, {
+      method: "DELETE",
+    });
+  } catch (error) {
+    console.error("Error deleting job:", error);
+  }
+};
+
+// =======================
+// APPLICATIONS
+// =======================
+
+export const getApplications = async (email = "") => {
+  try {
+    const url = email ? `${API_URL}/applications?email=${email}` : `${API_URL}/applications`;
+    const response = await fetch(url);
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching applications:", error);
+    return [];
+  }
+};
+
+export const applyJob = async (jobId, user) => {
+  try {
+    const response = await fetch(`${API_URL}/apply`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ jobId, ...user }),
+    });
+    return await response.json();
+  } catch (error) {
+    console.error("Error applying for job:", error);
+  }
+};
+
+export const deleteApplication = async (id) => {
+  try {
+    await fetch(`${API_URL}/applications/${id}`, {
+      method: "DELETE",
+    });
+  } catch (error) {
+    console.error("Error deleting application:", error);
+  }
+};
+
+export const updateApplicationStatus = async (id, status) => {
+  try {
+    const response = await fetch(`${API_URL}/update-status`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, status }),
+    });
+    return await response.json();
+  } catch (error) {
+    console.error("Error updating status:", error);
+  }
 };

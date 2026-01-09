@@ -1,16 +1,33 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { getJobs, applyJob } from "../services/api";
+import { useEffect, useState } from "react";
+import { getJob, applyJob } from "../services/api";
+import { useAuth } from "../context/AuthContext";
 
 function ApplyJob() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [job, setJob] = useState(null);
+  const { user } = useAuth();
 
-  const job = getJobs().find(j=>j.id==id);
+  useEffect(() => {
+    const fetchJob = async () => {
+      const foundJob = await getJob(id);
+      setJob(foundJob);
+    };
+    fetchJob();
+  }, [id]);
 
-  const submit = () => {
-    applyJob({ job: job.title, status:"Applied" });
-    navigate("/myapps");
+  const submit = async () => {
+    if (job && user) {
+      await applyJob(job.id, user);
+      navigate("/myapps");
+    } else if (!user) {
+        alert("Please login to apply");
+        navigate("/");
+    }
   };
+
+  if (!job) return <p>Loading job...</p>;
 
   return (
     <div className="center-page">

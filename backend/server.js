@@ -1,15 +1,105 @@
 // server.js
 const express = require("express");
 const cors = require("cors");
-const { jobs, applications } = require("./data");
+const { readData, writeData } = require("./db");
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
+// ✅ Signup
+app.post("/signup", (req, res) => {
+  const { name, email, password, role } = req.body;
+  if (!name || !email || !password || !role) {
+    return res.status(400).json({ message: "All fields are required" });
+  }
+
+  const data = readData();
+  if (data.users.find(u => u.email === email)) {
+    return res.status(400).json({ message: "User already exists" });
+  }
+
+  const newUser = {
+    id: data.users.length > 0 ? data.users[data.users.length - 1].id + 1 : 1,
+    name,
+    email,
+    password, // In a real app, hash this!
+    role
+  };
+
+  data.users.push(newUser);
+  writeData(data);
+
+  res.status(201).json({ message: "User registered", user: newUser });
+});
+
+// ✅ Login
+app.post("/login", (req, res) => {
+  const { email, password } = req.body;
+  const data = readData();
+  const user = data.users.find(u => u.email === email && u.password === password);
+
+  if (!user) {
+    return res.status(401).json({ message: "Invalid credentials" });
+  }
+
+  res.json({ message: "Login successful", user });
+});
+
 // ✅ Get all jobs
 app.get("/jobs", (req, res) => {
-  res.json(jobs);
+  const data = readData();
+  res.json(data.jobs);
+});
+
+// ✅ Add a new job
+app.post("/jobs", (req, res) => {
+  const { title, company, location } = req.body;
+  if (!title || !company) {
+    return res.status(400).json({ message: "Title and company are required" });
+  }
+
+  const data = readData();
+  const newJob = {
+    id: data.jobs.length > 0 ? data.jobs[data.jobs.length - 1].id + 1 : 1,
+    title,
+    company,
+    location: location || "Remote",
+  };
+  
+  data.jobs.push(newJob);
+  writeData(data);
+  
+  res.status(201).json(newJob);
+});
+
+// ✅ Get a single job
+app.get("/jobs/:id", (req, res) => {
+  const { id } = req.params;
+  const data = readData();
+  const job = data.jobs.find(j => j.id === Number(id));
+  
+  if (!job) {
+    return res.status(404).json({ message: "Job not found" });
+  }
+  
+  res.json(job);
+});
+
+// ✅ Delete a job
+app.delete("/jobs/:id", (req, res) => {
+  const { id } = req.params;
+  const data = readData();
+  const index = data.jobs.findIndex(j => j.id === Number(id));
+  
+  if (index === -1) {
+    return res.status(404).json({ message: "Job not found" });
+  }
+  
+  data.jobs.splice(index, 1);
+  writeData(data);
+  
+  res.json({ message: "Job deleted" });
 });
 
 // ✅ Apply for a job
@@ -20,37 +110,82 @@ app.post("/apply", (req, res) => {
     return res.status(400).json({ message: "Missing fields" });
   }
 
-  const job = jobs.find(j => j.id === jobId);
+  const data = readData();
+  const job = data.jobs.find(j => j.id === Number(jobId));
   if (!job) return res.status(404).json({ message: "Job not found" });
 
   const newApp = {
-    id: applications.length + 1,
-    jobId,
+    id: data.applications.length > 0 ? data.applications[data.applications.length - 1].id + 1 : 1,
+    jobId: Number(jobId),
     name,
     email,
     status: "Applied",
   };
-  applications.push(newApp);
+  
+  data.applications.push(newApp);
+  writeData(data);
 
   res.status(201).json({ message: "Application submitted", application: newApp });
 });
 
-// ✅ View all applications
+// ✅ View all applications (Enriched with Job Details)
 app.get("/applications", (req, res) => {
-  res.json(applications);
+  const { email } = req.query;
+  const data = readData();
+  
+  let applications = data.applications;
+  if (email) {
+    applications = applications.filter(app => app.email === email);
+  }
+
+  const enrichedApplications = applications.map(app => {
+    const job = data.jobs.find(j => j.id === app.jobId);
+    return {
+      ...app,
+      jobTitle: job ? job.title : "Unknown Job",
+      company: job ? job.company : "Unknown Company"
+    };
+  });
+  res.json(enrichedApplications);
 });
 
 // ✅ Update application status
 app.post("/update-status", (req, res) => {
   const { id, status } = req.body;
 
-  const appIndex = applications.findIndex(a => a.id === id);
+  const data = readData();
+  const appIndex = data.applications.findIndex(a => a.id === id);
   if (appIndex === -1) {
     return res.status(404).json({ message: "Application not found" });
   }
 
-  applications[appIndex].status = status;
-  res.json({ message: "Status updated", application: applications[appIndex] });
+  data.applications[appIndex].status = status;
+  
+  if (status === "Interview Scheduled") {
+    data.applications[appIndex].interviewDateTime = new Date().toLocaleString();
+  } else {
+    data.applications[appIndex].interviewDateTime = null;
+  }
+
+  writeData(data);
+  res.json({ message: "Status updated", application: data.applications[appIndex] });
+});
+
+// ✅ Delete an application
+app.delete("/applications/:id", (req, res) => {
+  const { id } = req.params;
+  
+  const data = readData();
+  const index = data.applications.findIndex(a => a.id === Number(id));
+  
+  if (index === -1) {
+    return res.status(404).json({ message: "Application not found" });
+  }
+
+  data.applications.splice(index, 1);
+  writeData(data);
+  
+  res.json({ message: "Application deleted" });
 });
 
 // ✅ Start the server

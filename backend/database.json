@@ -1,0 +1,26 @@
+{
+  "jobs": [
+    {
+      "id": 1,
+      "title": "Frontend Developer",
+      "company": "TechCorp",
+      "location": "Remote"
+    },
+    {
+      "id": 2,
+      "title": "Backend Developer",
+      "company": "CodeWorks",
+      "location": "Bangalore"
+    }
+  ],
+  "applications": [],
+  "users": [
+    {
+      "id": 1,
+      "name": "Auth Test User",
+      "email": "test1767979978321@example.com",
+      "password": "password123",
+      "role": "fresher"
+    }
+  ]
+}

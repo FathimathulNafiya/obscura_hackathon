@@ -10,15 +10,15 @@ function AddJob() {
   const [location, setLocation] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!title || !company) {
       alert("Title and company are required");
       return;
     }
-    addJob({ title, company, location });
+    await addJob({ title, company, location });
     alert("Job added");
-    navigate("/fresher");
+    navigate("/recruiter");
   };
 
   return (

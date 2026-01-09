@@ -8,13 +8,20 @@ function FresherDashboard() {
   const [apps, setApps] = useState([]);
 
   useEffect(() => {
-    setJobs(getJobs());
-    setApps(getApplications());
+    fetchData();
   }, []);
 
-  const handleApply = (job) => {
-    applyJob(job);                 // save application
-    setApps(getApplications());   // refresh applications
+  const fetchData = async () => {
+    const jobsData = await getJobs();
+    const appsData = await getApplications();
+    setJobs(jobsData);
+    setApps(appsData);
+  };
+
+  const handleApply = async (job) => {
+    await applyJob(job.id);        // save application using ID
+    const appsData = await getApplications(); // refresh applications
+    setApps(appsData);
   };
 
   return (
@@ -45,7 +52,8 @@ function FresherDashboard() {
               job.title.toLowerCase().includes(search.toLowerCase())
             )
             .map(job => {
-              const applied = apps.some(a => a.job === job.title);
+              // Check if already applied by comparing jobId
+              const applied = apps.some(a => a.jobId === job.id);
 
               return (
                 <div key={job.id} className="job-card">
