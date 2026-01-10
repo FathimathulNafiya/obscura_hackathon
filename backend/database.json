@@ -35,6 +35,24 @@
       "title": "CEO",
       "company": "Nambiar Works ",
       "location": "Remote"
+    },
+    {
+      "id": 7,
+      "title": "tfe",
+      "company": "fgbu",
+      "location": "fbhj"
+    },
+    {
+      "id": 8,
+      "title": "software manager",
+      "company": "tcs",
+      "location": "kochi"
+    },
+    {
+      "id": 9,
+      "title": "HR Manager",
+      "company": "CodeWorks",
+      "location": "TVM"
     }
   ],
   "applications": [
@@ -83,6 +101,20 @@
       "about": "nil",
       "status": "Rejected",
       "interviewDateTime": null
+    },
+    {
+      "id": 6,
+      "jobId": 6,
+      "name": "sas",
+      "email": "d@gmail.com",
+      "phone": "123213",
+      "education": "btech",
+      "experience": "intern",
+      "skills": "react",
+      "projects": "job orbit",
+      "about": "nil",
+      "status": "Interview Scheduled",
+      "interviewDateTime": "10/1/2026, 3:53:43 am"
     }
   ],
   "users": [
@@ -171,6 +203,13 @@
       "education": "b tech",
       "skills": "backend",
       "about": "frontrnd developer"
+    },
+    {
+      "id": 12,
+      "name": "TCS",
+      "email": "abc@gmail.com",
+      "password": "123",
+      "role": "recruiter"
     }
   ]
 }
